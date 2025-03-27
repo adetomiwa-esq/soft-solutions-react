@@ -31,8 +31,8 @@ function CreateNewUser({ createUser }) {
     createUser(userData)
   };
   return (
-    <div className={`flex justify-center mb-12`}>
-        <form className={`bg-white rounded-lg py-6 px-4 w-[550px] transition-all duration-300 delay-100 ease-in-out shadow-2xl`} onSubmit={handleSubmit}>
+    <div className={`w-11/12 max-w-[700px] lg:w-[50%] mb-12`}>
+        <form className={`bg-white rounded-lg py-6 px-4 shadow-2xl`} onSubmit={handleSubmit}>
             <div className="mb-6">
                 <h3 className="font-semibold text-center text-4xl">Create New Member</h3>
             </div>

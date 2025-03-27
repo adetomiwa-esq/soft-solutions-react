@@ -5,10 +5,10 @@ import { fetchUsers, deleteUser, updateUser } from '../actions/userActions';
 import { FaEllipsisH } from 'react-icons/fa';
 
 const columns = [
-    {
-        accessorKey: "_id", // Accesses `id` from the `User` type
-        header: "ID",
-      },
+    // {
+    //     accessorKey: "_id", // Accesses `id` from the `User` type
+    //     header: "ID",
+    //   },
       {
         accessorKey: "firstname", // Accesses `name` from the `User` type
         header: "firstname",
@@ -110,8 +110,8 @@ function Users({ users, loading, error, fetchUsers, updateUser, deleteUser }) {
 
     
   return (
-    <div>
-       {users && <table className="table-auto border-collapse borde border-gray-300 w-fit">
+    <div className='w-11/12 max-w-[700px] lg:w-[48%] overflow-x-scroll px-1 py-3'>
+       {users && <table className="table-auto border-collapse borde border-gray-300 w-full">
         <thead className="bg-[#F3F3F3]">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
@@ -134,6 +134,7 @@ function Users({ users, loading, error, fetchUsers, updateUser, deleteUser }) {
                                             </div>
                 </th>
               ))}
+              <th></th>
             </tr>
           ))}
         </thead>
@@ -163,10 +164,9 @@ function Users({ users, loading, error, fetchUsers, updateUser, deleteUser }) {
                                   }
                                   
                                 }}><FaEllipsisH />
-                                 <ul className={`absolute bg-zinc-100 shadow-2xl w-[140px] z-20 top-[-70px] ${editor ==  row.original._id ? 'block' : 'hidden'}`} >
-                                  <li className="border-b-1 py-2" onChange={() => {
+                                 <ul className={`absolute bg-zinc-100 shadow-2xl w-[140px] z-50 top-[-30px] text-center right-6 ${editor ==  row.original._id ? 'block' : 'hidden'}`} >
+                                  <li className="border-b-1 py-2" onClick={() => {
                                     const newStatus = row.original.status == 'active' ? 'inactive' : 'active'
-                                    
                                     updateUser(row.original._id, {status:  newStatus})
                                   }}>Change Status</li>
                                   <li className="py-2" onClick={() => deleteUser(row.original._id)}>Delete User</li>
