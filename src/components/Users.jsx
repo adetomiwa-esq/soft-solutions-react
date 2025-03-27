@@ -29,10 +29,12 @@ const columns = [
 
 function Users({ users, loading, error, fetchUsers, updateUser, deleteUser }) {
 
+  const [refresher, setRefresher] = useState(false)
+
     useEffect(() => {
       fetchUsers();
 
-    }, [fetchUsers]);
+    }, [fetchUsers, refresher]);
     
     
 
@@ -168,8 +170,16 @@ function Users({ users, loading, error, fetchUsers, updateUser, deleteUser }) {
                                   <li className="border-b-1 py-2" onClick={() => {
                                     const newStatus = row.original.status == 'active' ? 'inactive' : 'active'
                                     updateUser(row.original._id, {status:  newStatus})
+                                    if(!error){
+                                      setRefresher(prev => !prev)
+                                    }
                                   }}>Change Status</li>
-                                  <li className="py-2" onClick={() => deleteUser(row.original._id)}>Delete User</li>
+                                  <li className="py-2" onClick={() => {
+                                    deleteUser(row.original._id)
+                                    if(!error){
+                                      setRefresher(prev => !prev)
+                                    }
+                                    }}>Delete User</li>
                                   </ul></td>
             </tr>
           ))}

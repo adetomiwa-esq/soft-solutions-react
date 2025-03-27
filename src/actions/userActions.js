@@ -45,6 +45,7 @@ export const createUser = (userData) => {
         type: CREATE_USER_SUCCESS,
         payload: response.data,
       });
+      window.location.reload();
     } catch (error) {
       dispatch({
         type: CREATE_USER_FAILURE,
@@ -65,6 +66,7 @@ export const updateUser = (userId, userData) => {
           type: UPDATE_USER_SUCCESS,
           payload: response.data,
         });
+        window.location.reload();
       })
       .catch((error) => {
         dispatch({
@@ -86,6 +88,7 @@ export const deleteUser = (userId) => {
           type: DELETE_USER_SUCCESS,
           payload: userId,
         });
+        window.location.reload();
       })
       .catch((error) => {
         dispatch({

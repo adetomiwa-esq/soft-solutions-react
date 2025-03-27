@@ -20,13 +20,10 @@ function CreateNewUser({ createUser }) {
       [e.target.name]: e.target.value
     });
   };
-
-  console.log(userData);
   
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('hello');
     
     createUser(userData)
   };
