@@ -14,28 +14,10 @@ import {
   DELETE_USER_FAILURE,
 } from "./types";
 
-const API_URL = "https://soft-solutions-api.onrender.com/api/user"; // Replace with your actual API endpoint
+const API_URL = "https://soft-solutions-api.onrender.com/api/user";
 
 // Fetch all users
 export const fetchUsers = () => {
-  //   return (dispatch) => {
-  //     dispatch({ type: FETCH_USERS_REQUEST });
-  //     axios
-  //       .get(API_URL)
-  //       .then((response) => {
-  //         dispatch({
-  //           type: FETCH_USERS_SUCCESS,
-  //           payload: response.data,
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         dispatch({
-  //           type: FETCH_USERS_FAILURE,
-  //           payload: error.message,
-  //         });
-  //       });
-  //   };
-
   return async (dispatch) => {
     try {
       dispatch({ type: FETCH_USERS_REQUEST });
@@ -55,22 +37,20 @@ export const fetchUsers = () => {
 
 // Create a new user
 export const createUser = (userData) => {
-  return (dispatch) => {
-    dispatch({ type: CREATE_USER_REQUEST });
-    axios
-      .post(API_URL, userData)
-      .then((response) => {
-        dispatch({
-          type: CREATE_USER_SUCCESS,
-          payload: response.data,
-        });
-      })
-      .catch((error) => {
-        dispatch({
-          type: CREATE_USER_FAILURE,
-          payload: error.message,
-        });
+  return async (dispatch) => {
+    try {
+      dispatch({ type: CREATE_USER_REQUEST });
+      const response = await axios.post(API_URL + "/new", userData);
+      dispatch({
+        type: CREATE_USER_SUCCESS,
+        payload: response.data,
       });
+    } catch (error) {
+      dispatch({
+        type: CREATE_USER_FAILURE,
+        payload: error.message,
+      });
+    }
   };
 };
 

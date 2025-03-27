@@ -1,13 +1,8 @@
 import { useEffect, useState } from 'react'
-// import AxiosInstance from '../Api/AxiosInstance'
-// import Endpoints from '../Api/Enpoints'
-import { FaEllipsis } from 'react-icons/fa6'
-import { useSelector, useDispatch } from "react-redux";
-// import { fetchUsers, addUser, updateUser, deleteUser } from "../store";
 import { flexRender, getCoreRowModel, getFilteredRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
 import { connect } from 'react-redux';
-import { fetchUsers, deleteUser } from '../actions/userActions';
-import axios from 'axios';
+import { fetchUsers, deleteUser, updateUser } from '../actions/userActions';
+import { FaEllipsisH } from 'react-icons/fa';
 
 const columns = [
     {
@@ -27,65 +22,17 @@ const columns = [
         header: "Email",
       },
       {
-        accessorKey: "address", // Accesses `email` from the `User` type
-        header: "Address",
+        accessorKey: "status", // Accesses `email` from the `User` type
+        header: "Status",
       }
 ]
 
-function Users({ users, loading, error, fetchUsers, deleteUser }) {
-
-
-    // const users = useSelector(state => state.users)
-    // const dispatch = useDispatch()
-
-    // const [current, setCurrent] = useState(null)
-    // useEffect(() => {
-    //     // fetchHistory()
-
-    //     dispatch(fetchUsers)
-        
-        
-
-    //     // const body = document.querySelector('body')
-
-    //     // body.addEventListener('click', () => {
-    //     //     setCurrent(null)
-    //     // })
-    // }, [dispatch])
-
-
-    //const [incomingData, setIncomingData] = useState([])
-    // const [data, setData] = useState([])
-    // const [loading, setLoading] = useState(true)
-
-    //  async function fetchHistory(){
-    //     await AxiosInstance.get(Endpoints.getTransactions).then((res) => {
-    //         const data =  res.data
-    //         // setIncomingData(data);
-    //         setData(data)
-    //         setLoading(false)
-    //         console.log(data);
-    //         console.log(loading);
-            
-            
-    //     }).catch(err => {
-    //         console.log(err);
-            
-    //     })
-    // }
+function Users({ users, loading, error, fetchUsers, updateUser, deleteUser }) {
 
     useEffect(() => {
       fetchUsers();
 
-      getstat()
     }, [fetchUsers]);
-  
-    //console.log(users);
-
-    async function getstat(){
-      const res = await axios.get('https://soft-solutions-api.onrender.com/api/user')
-      // console.log(res.data);
-    }
     
     
 
@@ -132,26 +79,33 @@ function Users({ users, loading, error, fetchUsers, deleteUser }) {
         },
     ]
 
-    const [data, setData] = useState(loading ? [...tableData] : users)
-    const [now, setNow] = useState(users)
-    console.log(users);
+    const [data, setData] = useState(!users ? [...tableData] : users)
+
+    useEffect(() => {
+      setData(users)
+    }, [users])
+    
     
 
-    // const [sorting, setSorting] = useState([])
     const [globalFilter, setGlobalFilter] = useState("")
 
     const table = useReactTable({
         data,
         columns,
         state: {
-            // sorting,
             globalFilter
         },
         getCoreRowModel: getCoreRowModel(),
-        // onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
         onGlobalFilterChange: setGlobalFilter,
         getFilteredRowModel: getFilteredRowModel()
+    })
+
+    const [editor, setEditor] = useState(null)
+
+    const body = document.querySelector('body')
+    body.addEventListener('click', () => {
+      setEditor(null)
     })
 
     
@@ -200,6 +154,23 @@ function Users({ users, loading, error, fetchUsers, deleteUser }) {
                                         </td>
                                     ))
                                 }
+                                <td className='relative cursor-pointer' onClick={(e) => {
+                                  e.stopPropagation()
+                                  if(editor == row.original._id){
+                                    setEditor(null)
+                                  } else {
+                                    setEditor(row.original._id)
+                                  }
+                                  
+                                }}><FaEllipsisH />
+                                 <ul className={`absolute bg-zinc-100 shadow-2xl w-[140px] z-20 top-[-70px] ${editor ==  row.original._id ? 'block' : 'hidden'}`} >
+                                  <li className="border-b-1 py-2" onChange={() => {
+                                    const newStatus = row.original.status == 'active' ? 'inactive' : 'active'
+                                    
+                                    updateUser(row.original._id, {status:  newStatus})
+                                  }}>Change Status</li>
+                                  <li className="py-2" onClick={() => deleteUser(row.original._id)}>Delete User</li>
+                                  </ul></td>
             </tr>
           ))}
         </tbody>
@@ -214,34 +185,4 @@ const mapStateToProps = (state) => ({
   error: state.users.error
 });
 
-export default connect(mapStateToProps, { fetchUsers, deleteUser }) (Users)
-
-
-
-
-
-
-
-// const handleSubmit = async (id, status) => {
-    //     console.log(id, status);
-    //     const newStatus = status.toLowerCase() === "pending" ? "completed" : "pending"
-        
-    //       try {
-    //          await AxiosInstance.put(`transaction/${id}`, {status: newStatus});
-    //           setCurrent(null)
-    //         fetchHistory()
-    //       } catch (error) {
-    //         console.error("Error:", error);
-    //       }
-    //     };
-  
-    //     const deleteTransaction = async (id) => {
-          
-    //         try {
-    //            await AxiosInstance.delete(`transaction/${id}`);
-    //             setCurrent(null)
-    //           fetchHistory()
-    //         } catch (error) {
-    //           console.error("Error:", error);
-    //         }
-    //       };
+export default connect(mapStateToProps, { fetchUsers, deleteUser, updateUser }) (Users)
